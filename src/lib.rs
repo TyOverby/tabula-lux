@@ -67,3 +67,24 @@ impl <'a> tabula::components::DragRegionRender for DebugLuxBackend<'a> {
         Ok(())
     }
 }
+
+impl <'a> tabula::components::ContainerRender for DebugLuxBackend<'a> {
+    type Error = ();
+
+    fn draw_container<R, F: FnOnce(&mut Self) -> Result<R, Self::Error>> (
+        &mut self,
+        _id: &Id,
+        rect: Rect<f32>,
+        Point(x, y): Point<f32>,
+        f: F) -> Result<R, Self::Error> {
+
+        let Point(rx, ry) = rect.0;
+        let (w, h) = (rect.width(), rect.height());
+        self.0.rect(rx, ry, w, h).color(lux::color::GRAY).fill();
+
+        self.0.translate(x, y);
+        let r = f(self);
+        self.0.translate(-x, -y);
+        r
+    }
+}
