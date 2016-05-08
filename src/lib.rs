@@ -60,8 +60,8 @@ impl <'a> tabula::components::DragRegionRender for DebugLuxBackend<'a> {
         let Point(x, y) = rect.0;
         let (w, h) = (rect.width(), rect.height());
         let color = match drag_action {
-            DragAction::None => lux::color::RED,
-            _ => lux::color::BLUE,
+            DragAction::None => lux::color::GREEN,
+            _ => lux::color::PURPLE,
         };
         self.0.rect(x, y, w, h).color(color).fill();
         Ok(())
@@ -80,11 +80,29 @@ impl <'a> tabula::components::ContainerRender for DebugLuxBackend<'a> {
 
         let Point(rx, ry) = rect.0;
         let (w, h) = (rect.width(), rect.height());
-        self.0.rect(rx, ry, w, h).color(lux::color::GRAY).fill();
+        self.0.rect(rx, ry, w, h).color(lux::color::rgba(0.0, 0.0, 0.0, 0.2)).fill();
 
         self.0.translate(x, y);
         let r = f(self);
         self.0.translate(-x, -y);
         r
+    }
+}
+
+impl <'a> tabula::components::ScrollbarRender for DebugLuxBackend<'a> {
+    type Error = ();
+
+    fn draw_scrollbar(&mut self, _id: &Id, rect: Rect<f32>, over_rect: Rect<f32>, _over: bool, _down: bool) -> Result<(), Self::Error> {
+        {
+            let Point(x, y) = rect.0;
+            let (w, h) = (rect.width(), rect.height());
+            self.0.rect(x, y, w, h).color(lux::color::BLUE).fill();
+        } {
+            let Point(x, y) = over_rect.0;
+            let (w, h) = (over_rect.width(), over_rect.height());
+            self.0.rect(x, y, w, h).color(lux::color::RED).fill();
+        }
+
+        Ok(())
     }
 }

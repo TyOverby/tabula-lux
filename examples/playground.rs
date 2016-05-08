@@ -15,6 +15,7 @@ fn main() {
 
     let mut slider_pos = 0.5;
     let mut region_rect = Rect::xywh(200.0, 200.0, 100.0, 100.0);
+    let mut scrollbar_pos = 50.0;
 
     while window.is_open() {
         ui_ctx.feed_events_for_frame(window.events().filter_map(::tabula_lux::translate_event));
@@ -41,5 +42,7 @@ fn main() {
             }
             Ok(())
         }).unwrap();
+
+        scrollbar(&mut ui_ctx, id!(), Rect::xywh(550.0, 100.0, 40.0, 400.0), 100.0, 200.0, &mut scrollbar_pos).unwrap();
     }
 }
